@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Connect</title>
+</head>
+<body>
+  <p>I am made to connect</p>
+</body>
+
+<button onclick="clickMe()">Click me</button>
+<p>{{access_code}}</p>
+
+<script src="https://cdn.dapi.co/connect/v1/connector.js"></script>
+<script>
+  console.log("abra")
+      var handler = Dapi.create({
+        //Intiation Connector with the correct paramteres
+        environment: 'sandbox',
+        appKey:'c46473ab0bccd6fae2e2327efecd9f6bb77b960b1e3c84cfb72550642157f67e',
+        redirectUri: 'http://localhost:3000',
+        onSuccess: function(response) {
+          //This is the callback function when the end-user connects succesfully
+          console.log('onSuccess')
+          console.log("reponse", response);
+          console.log("code", response.accessCode);
+          saveToken(response.accessCode);
+        },
+        onFailure: function(err) {
+          //This is the callback function when the end-user is unable to connect succesfully
+          if (err != null) {
+            console.log('Error')
+            console.log(err)
+          } else {
+            console.log('No error')
+          }
+        },
+      })
+      var clickMe = function() {
+        //function to show the Connect interface
+        // saveToken("access_code");
+        handler.open()
+      }
+
+      // passs token to backend to autheticate and get new long token
+
+      var saveToken = (temp_token) => {
+        console.log("temo token", temp_token)
+        var request = new XMLHttpRequest()
+        request.open('POST', '/token', true)
+        request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        request.send(`temp_token=${temp_token}`)
+      }
+
+</script>
+</html>
