@@ -1,37 +1,16 @@
-const axios = require("axios");
 const {successResponse, errorResponse} = require('../lib/response');
-// const { validateUserRegister, validateUserRole, validateUserPermission, 
-//   validateAuth } = require('../validators/users');
-
-const cache = require('../lib/cache');
+const { hitAuthApi } = require('../lib/common')
 
 const logStruct = (func, error) => {
   return {'func': func, 'file': 'dataController', error}
 }
 
-let TOKEN;
-const APP_SECRET = process.env.APP_SECRET;
-const APP_KEY = process.env.APP_KEY;
-
 const identify = async () => {
   try {
-    // const validInput = validateUserRegister(reqData);
-    if (!TOKEN) TOKEN = await cache.get('user-token');
-
     let url = 'https://sandbox.dapi.co/v1/data/Identity';
-    const headers = {
-      "Authorization" : `Bearer ${TOKEN}`
-    }
-    const body = 
-    { 
-      appSecret: APP_SECRET, 
-      addresses: ['http://ddaa2b87.ngrok.io/webhooks']
-    };
 
-    const response = await axios.post(url, headers, body)
-
+    const response = await hitAuthApi(url);
     console.log("identify", response.data);
-
     return successResponse(200, response.data )
   } catch (error) {
     console.error('error -> ', logStruct('identify', error))
@@ -39,6 +18,49 @@ const identify = async () => {
   }
 };
 
+const userAccounts = async () => {
+  try {
+    let url = 'https://sandbox.dapi.co/v1/data/UserAccounts';
+
+    const response = await hitAuthApi(url);
+    console.log("userAccounts", response.data);
+    return successResponse(200, response.data )
+  } catch (error) {
+    console.error('error -> ', logStruct('userAccounts', error))
+    return errorResponse(error.status, error.message);
+  }
+};
+
+const accountBalance = async () => {
+  try {
+    let url = 'https://sandbox.dapi.co/v1/data/AccountBalance';
+    
+    const response = await hitAuthApi(url);
+    console.log("accountBalance", response.data);
+    return successResponse(200, response.data )
+  } catch (error) {
+    console.error('error -> ', logStruct('accountBalance', error))
+    return errorResponse(error.status, error.message);
+  }
+};
+
+
+const transactions = async () => {
+  try {
+    let url = 'https://sandbox.dapi.co/v1/data/Transactions'
+
+    const response = await hitAuthApi(url);
+    console.log("transactions", response.data);
+    return successResponse(200, response.data )
+  } catch (error) {
+    console.error('error -> ', logStruct('transactions', error))
+    return errorResponse(error.status, error.message);
+  }
+};
+
 module.exports = {
-  identify
+  identify,
+  userAccounts,
+  accountBalance,
+  transactions
 };

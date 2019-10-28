@@ -10,21 +10,13 @@ const logStruct = (func, error) => {
 }
 
 const {successResponse, errorResponse} = require('../lib/response');
+const { isValidPayload } = require('../lib/validator');
 
-const addToQueue = async (req) => {
+const addToQueue = async (reqData) => {
   try {
-    
-    console.log("addtoQueue -->", req. data, req.body)
-
-    const reqData = JSON.stringify(req.body);
-
-		if (!reqData) {
-      return successResponse(200)
-			// return res.status(200).send('success');
-		}
+    console.log("addtoQueue reqData -->", reqData)
+    if (!isValidPayload(reqData)) return errorResponse(520, reqData);
 		
-		// // validate signature
-		// if (util.isValidPayload(signature, payload)) {
 
 		// 	// add to queue
 		// 	queue.addToQueue(payload);
@@ -38,11 +30,24 @@ const addToQueue = async (req) => {
 
     return successResponse(200, response )
   } catch (error) {
-    console.error('error -> ', logStruct('identify', error))
+    console.error('error -> ', logStruct('addToQueue', error))
+    return errorResponse(error.status, error.message);
+  }
+};
+
+const getWebhookData = async () => {
+  try {
+    console.log("hit post webhook")
+    let url = 'http://14fb34aa.ngrok.io/webhooks'
+    const response = await axios.post(url)
+    return successResponse(200)
+  } catch (error) {
+    console.error('error -> ', logStruct('getWebhookData', error))
     return errorResponse(error.status, error.message);
   }
 };
 
 module.exports = {
-  addToQueue
+  addToQueue,
+  getWebhookData
 }
