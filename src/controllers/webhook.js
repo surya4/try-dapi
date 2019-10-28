@@ -21,11 +21,19 @@ const getWebhookData = async () => {
 
 const addJobToCache = async (reqData) => {
   try {
-    console.log("addJobToCache reqData -->", reqData)
     if (!isValidPayload(reqData)) return errorResponse(520, reqData);
 
-    const response = await cache.lpush('jobs', reqData);
-    console.log("addJobToCache data -->", response);
+    const key = Object.keys(reqData);
+    let queue, response;
+
+    if (key.length > 0) {
+      if (['identity', 'userAccounts', 'balance', 'transactions'].indexOf(key[0]) > -1) {
+        queue = 'data-jobs'
+      } else {
+        queue = 'pay-jobs'
+      }
+      const response = await cache.lpush(queue, reqData);
+    }
 
     return successResponse(200)
   } catch (error) {
@@ -34,14 +42,35 @@ const addJobToCache = async (reqData) => {
   }
 };
 
-const getJobFromCache = async (req, res) => {
+const getDataFromCache = async (req, res) => {
   try {
     const intervalId = setInterval(async () => {
-        const data = await cache.rpop('jobs');
-        console.log("getJobFromCache data -->", data);
+        let data = await cache.rpop('data-jobs');
         if (data) {
-          const type = Object.keys(data)[0];
-          res.write(`data: ${data}\n\n`);
+          data = JSON.parse(data);
+          const keys = Object.keys(data);
+          res.write(`data: ${JSON.stringify(data)}\n\n`);
+        }
+    }, 10000);
+
+    req.on('close', () => {
+        clearInterval(intervalId);
+    });
+
+  } catch (error) {
+    console.error('error -> ', logStruct('getJobFromCache', error))
+    return errorResponse(error.status, error.message);
+  }
+};
+
+const getPayFromCache = async (req, res) => {
+  try {
+    const intervalId = setInterval(async () => {
+        let data = await cache.rpop('pay-jobs');
+        if (data) {
+          data = JSON.parse(data);
+          const keys = Object.keys(data);
+            res.write(`data: ${JSON.stringify(data)}\n\n`); 
         }
     }, 10000);
 
@@ -57,6 +86,7 @@ const getJobFromCache = async (req, res) => {
 
 module.exports = {
   addJobToCache,
-  getJobFromCache,
+  getDataFromCache,
+  getPayFromCache,
   getWebhookData
 }

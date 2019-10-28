@@ -12,8 +12,6 @@ const {successResponse, errorResponse} = require('../lib/response');
 
 const getToken = async (reqData) => {
   try {
-    // const validInput = validateUserRegister(reqData);
-
     let url = 'https://sandbox.dapi.co/v1/auth/ExchangeToken';
 
     const body = 
@@ -24,9 +22,6 @@ const getToken = async (reqData) => {
     };
 
     const response = await hitOpenApi(url, body);
-
-    console.log("response", response);
-    console.log("body", response.data);
 
     if (response.data.success) {
       await cache.set('user-token', response.data.accessToken); 

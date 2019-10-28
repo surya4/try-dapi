@@ -11,12 +11,10 @@ const initiatePayment = async () => {
 
     const body = {
       amount: 14,
-      beneficiary: 'Surya'
+      beneficiary: 'dapi_user1'
     }
 
     const response = await hitAuthApi(url, body);
-    console.log("body -->", body);
-    console.log("initiatePayment", response.data);
     return successResponse(200, response.data )
   } catch (error) {
     console.error('error -> ', logStruct('initiatePayment', error))
@@ -33,8 +31,6 @@ const resumePayment = async (jobID, otp) => {
     }
 
     const response = await hitAuthApi(url, body);
-    console.log("body -->", body);
-    console.log("resumePayment", response.data);
     return successResponse(200, response.data)
   } catch (error) {
     console.error('error -> ', logStruct('resumePayment', error))
@@ -47,7 +43,6 @@ const getBeneficiaryList = async () => {
     let url = 'https://sandbox.dapi.co/v1/payment/GetBeneficiaryList';
     
     const response = await hitAuthApi(url);
-    console.log("getBeneficiaryList", response.data);
     return successResponse(200, response.data )
   } catch (error) {
     console.error('error -> ', logStruct('getBeneficiaryList', error))

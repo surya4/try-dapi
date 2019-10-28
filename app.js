@@ -33,9 +33,6 @@ app.use('/', index);
 app.use((req, res, next) => {
     let err = new Error('Not Found');
     err.status = 404;
-    // res.render('pages/404', {
-    //     'message': 'Page not found'
-    // });
     next(err);
 });
 
@@ -48,7 +45,6 @@ app.use((err, req, res, next) => {
     // render the error page
     res.status(err.status || 500);
     console.error("error ->", err)
-    // res.render('pages/error');
 });
 
 module.exports = app;

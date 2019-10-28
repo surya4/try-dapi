@@ -10,7 +10,6 @@ const identify = async () => {
     let url = 'https://sandbox.dapi.co/v1/data/Identity';
 
     const response = await hitAuthApi(url);
-    console.log("identify", response.data);
     return successResponse(200, response.data )
   } catch (error) {
     console.error('error -> ', logStruct('identify', error))
@@ -23,7 +22,6 @@ const userAccounts = async () => {
     let url = 'https://sandbox.dapi.co/v1/data/UserAccounts';
 
     const response = await hitAuthApi(url);
-    console.log("userAccounts", response.data);
     return successResponse(200, response.data )
   } catch (error) {
     console.error('error -> ', logStruct('userAccounts', error))
@@ -36,7 +34,6 @@ const accountBalance = async () => {
     let url = 'https://sandbox.dapi.co/v1/data/AccountBalance';
     
     const response = await hitAuthApi(url);
-    console.log("accountBalance", response.data);
     return successResponse(200, response.data )
   } catch (error) {
     console.error('error -> ', logStruct('accountBalance', error))
@@ -50,7 +47,6 @@ const transactions = async () => {
     let url = 'https://sandbox.dapi.co/v1/data/Transactions'
 
     const response = await hitAuthApi(url);
-    console.log("transactions", response.data);
     return successResponse(200, response.data )
   } catch (error) {
     console.error('error -> ', logStruct('transactions', error))

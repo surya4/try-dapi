@@ -9,14 +9,18 @@ const webhookURL = process.env.WEBHOOKURL || "http://e3300d33.ngrok.io/webhooks"
 const hitAuthApi = async (url, body = {}, headers = {}) => {
   try {
     if (!TOKEN) TOKEN = await cache.get('user-token');
-    headers["Authorization"] = `Bearer ${TOKEN}`;
 
-    body["appSecret"] = APP_SECRET;
-    body["addresses"] = [webhookURL];
+    body.appSecret = APP_SECRET;
+    body.addresses = [webhookURL];
 
-    console.log("hit api, body", body)
-  
-    const response = await axios.post(url, headers, body);
+    const options = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${TOKEN}`
+      }
+    };
+    
+    const response = await axios.post(url, body, options);
     return response; 
   } catch (error) {
     throw error;

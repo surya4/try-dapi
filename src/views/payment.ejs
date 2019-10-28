@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>User Data</title>
+  <title>Payments</title>
   <style>
         body p {
               color: black;
@@ -17,7 +17,7 @@
   </style>
 </head>
 <body>
-  <h2 style="text-align: center; color: #002856;">User Data</h2>
+  <h2 style="text-align: center; color: #002856;">Payments</h2>
   <div class="container" style="text-align: center;">
 
 
@@ -25,7 +25,7 @@
 </body>
 <script>
 
-const sseSource = new EventSource('/data-stream');
+const sseSource = new EventSource('/pay-stream');
 
 sseSource.addEventListener('message', (e) => {
     const messageData = e.data;
