@@ -1,7 +1,6 @@
-const axios = require("axios");
-
-const APP_SECRET = process.env.APP_SECRET;
+const { hitAuthApi, hitOpenApi } = require('../lib/common')
 const APP_KEY = process.env.APP_KEY;
+const APP_SECRET = process.env.APP_SECRET;
 
 const cache = require('../lib/cache');
 
@@ -19,10 +18,12 @@ const getToken = async (reqData) => {
 
     const body = 
     { 
-      appSecret: APP_SECRET, accessCode: reqData.temp_token, appKey: APP_KEY,
+      appSecret: APP_SECRET,
+      accessCode: reqData.temp_token, 
+      appKey: APP_KEY,
     };
 
-    const response = await axios.post(url, body);
+    const response = await hitOpenApi(url, body);
 
     console.log("response", response);
     console.log("body", response.data);

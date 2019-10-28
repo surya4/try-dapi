@@ -1,8 +1,10 @@
 let TOKEN;
 const APP_SECRET = process.env.APP_SECRET;
 const APP_KEY = process.env.APP_KEY;
-
+const cache = require('./cache');
 const axios = require("axios");
+
+const webhookURL = process.env.WEBHOOKURL || "http://e3300d33.ngrok.io/webhooks";
 
 const hitAuthApi = async (url, body = {}, headers = {}) => {
   try {
@@ -10,7 +12,9 @@ const hitAuthApi = async (url, body = {}, headers = {}) => {
     headers["Authorization"] = `Bearer ${TOKEN}`;
 
     body["appSecret"] = APP_SECRET;
-    body["addresses"] = ["http://14fb34aa.ngrok.io/webhooks"];
+    body["addresses"] = [webhookURL];
+
+    console.log("hit api, body", body)
   
     const response = await axios.post(url, headers, body);
     return response; 
@@ -30,5 +34,6 @@ const hitOpenApi = async (url, body = null) => {
 
 module.exports = {
   hitAuthApi,
-  hitOpenApi
+  hitOpenApi,
+  webhookURL
 }

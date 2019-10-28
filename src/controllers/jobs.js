@@ -16,7 +16,7 @@ const getJobStatus = async (jobID) => {
 
     }
 
-    const response = await hitAuthApi(url);
+    const response = await hitAuthApi(url, body);
     console.log("body -->", body);
     console.log("getJobStatus", response.data);
     return successResponse(200, response.data )

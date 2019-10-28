@@ -34,3 +34,23 @@ exports.get = async(key) => {
     throw error;
   }
 };
+
+exports.lpush = async(list, value) => {
+  try {
+    const response = await client.lpushAsync(list,JSON.stringify(value));
+    return response;
+  } catch (error) {
+    console.error('error -> ', logStruct('set', error))
+    throw error
+  }
+};
+
+exports.rpop = async(list) => {
+  try {
+    const response = await client.rpopAsync(list);
+    return response;
+  } catch (error) {
+    console.error('error -> ', logStruct('get', error))
+    throw error;
+  }
+};

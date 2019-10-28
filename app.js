@@ -15,20 +15,6 @@ const index = require('./src/routes/index');
 
 const app = express();
 
-// const abcd = async () => {
-//     try {
-//         console.log("calling func")
-//         const url = 'http://ddaa2b87.ngrok.io/webhooks';
-//         const response = await axios.post(url, {})
-//         console.log("abra", response.body)
-//     } catch (error) {
-//         console.log("abra error", error)
-//     }
-//     setTimeout(abcd, 10000)
-// }
-
-// abcd();
-
 // view engine setup
 app.set('views', path.join(__dirname, './src/views'));
 app.set('view engine', 'ejs');

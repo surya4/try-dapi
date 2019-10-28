@@ -1,45 +1,17 @@
 const axios = require("axios");
 
-const APP_SECRET = process.env.APP_SECRET;
-const APP_KEY = process.env.APP_KEY;
-
-const cache = require('../lib/cache');
-
 const logStruct = (func, error) => {
-  return {'func': func, 'file': 'authController', error}
+  return {'func': func, 'file': 'hookController', error}
 }
 
 const {successResponse, errorResponse} = require('../lib/response');
 const { isValidPayload } = require('../lib/validator');
-
-const addToQueue = async (reqData) => {
-  try {
-    console.log("addtoQueue reqData -->", reqData)
-    if (!isValidPayload(reqData)) return errorResponse(520, reqData);
-		
-
-		// 	// add to queue
-		// 	queue.addToQueue(payload);
-		// 	console.log('task added to queue ');
-		
-		// 	return res.status(200).send('success');
-		// } else {
-		// 	return res.status(401).send('FORBIDDEN');
-		// }
-    
-
-    return successResponse(200, response )
-  } catch (error) {
-    console.error('error -> ', logStruct('addToQueue', error))
-    return errorResponse(error.status, error.message);
-  }
-};
+const { webhookURL } = require('../lib/common');
+const cache = require('../lib/cache');
 
 const getWebhookData = async () => {
   try {
-    console.log("hit post webhook")
-    let url = 'http://14fb34aa.ngrok.io/webhooks'
-    const response = await axios.post(url)
+    const response = await axios.post(webhookURL)
     return successResponse(200)
   } catch (error) {
     console.error('error -> ', logStruct('getWebhookData', error))
@@ -47,7 +19,44 @@ const getWebhookData = async () => {
   }
 };
 
+const addJobToCache = async (reqData) => {
+  try {
+    console.log("addJobToCache reqData -->", reqData)
+    if (!isValidPayload(reqData)) return errorResponse(520, reqData);
+
+    const response = await cache.lpush('jobs', reqData);
+    console.log("addJobToCache data -->", response);
+
+    return successResponse(200)
+  } catch (error) {
+    console.error('error -> ', logStruct('addJobToCache', error))
+    return errorResponse(error.status, error.message);
+  }
+};
+
+const getJobFromCache = async (req, res) => {
+  try {
+    const intervalId = setInterval(async () => {
+        const data = await cache.rpop('jobs');
+        console.log("getJobFromCache data -->", data);
+        if (data) {
+          const type = Object.keys(data)[0];
+          res.write(`data: ${data}\n\n`);
+        }
+    }, 10000);
+
+    req.on('close', () => {
+        clearInterval(intervalId);
+    });
+
+  } catch (error) {
+    console.error('error -> ', logStruct('getJobFromCache', error))
+    return errorResponse(error.status, error.message);
+  }
+};
+
 module.exports = {
-  addToQueue,
+  addJobToCache,
+  getJobFromCache,
   getWebhookData
 }
