@@ -13,11 +13,10 @@ const getJobStatus = async (jobID) => {
     const body = {
       appKey: APP_KEY,
       jobID,
-
     }
 
     const response = await hitAuthApi(url, body);
-    return successResponse(200, response.data )
+    return successResponse(200, response.data)
   } catch (error) {
     console.error('error -> ', logStruct('getJobStatus', error))
     return errorResponse(error.status, error.message);

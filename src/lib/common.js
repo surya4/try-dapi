@@ -4,7 +4,7 @@ const APP_KEY = process.env.APP_KEY;
 const cache = require('./cache');
 const axios = require("axios");
 
-const webhookURL = process.env.WEBHOOKURL || "http://e3300d33.ngrok.io/webhooks";
+const webhookURL = process.env.WEBHOOK_URL;
 
 const hitAuthApi = async (url, body = {}, headers = {}) => {
   try {
@@ -19,7 +19,7 @@ const hitAuthApi = async (url, body = {}, headers = {}) => {
           'Authorization': `Bearer ${TOKEN}`
       }
     };
-    
+
     const response = await axios.post(url, body, options);
     return response; 
   } catch (error) {

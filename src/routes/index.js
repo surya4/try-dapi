@@ -49,7 +49,7 @@ router.get('/jobs', async (req, res, next) => {
 
 router.post('/jobs', async (req, res, next) => {
   const response = await jobsController.getJobStatus(req.body.jobID);
-  res.render('jobs', {data: response});
+  res.render('jobs', {data: JSON.stringify(response)});
 });
 
 router.post('/webhooks', async (req, res, next) => {
